@@ -5,3 +5,4 @@ edition = "2021"
 
 
 [dependencies]
+neighbors = { git = "https://github.com/j-negro/cell-index-method" }
