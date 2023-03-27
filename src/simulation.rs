@@ -1,5 +1,5 @@
 use neighbors::{cell_index_method::CellIndexMethod, NeighborMethod, Particle as MethodParticle};
-use rand::Rng;
+use rand::{rngs::ThreadRng, Rng};
 use std::f64::consts::PI;
 
 use crate::particle::Particle;
@@ -13,6 +13,7 @@ pub struct Simulation {
     particles: Vec<Particle>,
     noise_amplitude: f64,
     neighbors_method: CellIndexMethod<Particle>,
+    rng: ThreadRng,
 }
 
 impl Simulation {
@@ -42,11 +43,16 @@ impl Simulation {
             particles,
             noise_amplitude,
             neighbors_method,
+            rng,
         }
     }
 
     pub fn get_particles(&self) -> &[Particle] {
         &self.particles
+    }
+
+    pub fn get_length(&self) -> f64 {
+        self.length
     }
 
     pub fn advance_time(&mut self) {
@@ -73,16 +79,14 @@ impl Simulation {
             let sin_avg = sin_sum / (particle_neighbors.len() + 1) as f64;
             let cos_avg = cos_sum / (particle_neighbors.len() + 1) as f64;
 
-            particle.update_angle((sin_avg).atan2(cos_avg) + self.noise_amplitude);
+            let noise = self
+                .rng
+                .gen_range(-self.noise_amplitude / 2f64..self.noise_amplitude / 2f64);
 
-            let mut x = (x + v_x * DELTA_TIME) % self.length;
-            if x < 0.0 {
-                x += self.length;
-            }
-            let mut y = (y + v_y * DELTA_TIME) % self.length;
-            if y < 0.0 {
-                y += self.length;
-            }
+            particle.update_angle((sin_avg).atan2(cos_avg) + noise);
+
+            let x = (x + v_x * DELTA_TIME).rem_euclid(self.length);
+            let y = (y + v_y * DELTA_TIME).rem_euclid(self.length);
             particle.update_position(x, y);
         }
     }
