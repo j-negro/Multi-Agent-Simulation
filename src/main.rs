@@ -21,11 +21,21 @@ fn main() -> Result<()> {
         args.number_of_particles,
         args.m,
     );
-    output_snapshot(&mut file, simulation.get_particles())?;
+    output_snapshot(
+        &mut file,
+        simulation.get_particles(),
+        simulation.get_length(),
+        0,
+    )?;
 
-    for _ in 0..args.max_iterations {
+    for i in 0..args.max_iterations {
         simulation.advance_time();
-        output_snapshot(&mut file, simulation.get_particles())?;
+        output_snapshot(
+            &mut file,
+            simulation.get_particles(),
+            simulation.get_length(),
+            i + 1,
+        )?;
     }
 
     Ok(())

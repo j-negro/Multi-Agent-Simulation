@@ -15,6 +15,6 @@ pub struct Cli {
     pub area_size: f64,
     #[arg(short, long, default_value_t = 1000)]
     pub max_iterations: u32,
-    #[arg(short, long, default_value_t = String::from("./output.txt"))]
+    #[arg(short, long, default_value_t = String::from("./output.xyz"))]
     pub output_path: String,
 }
