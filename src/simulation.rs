@@ -12,7 +12,6 @@ pub struct Simulation {
     interaction_range: f64,
     particles: Vec<Particle>,
     noise_amplitude: f64,
-    time: u32,
     neighbors_method: CellIndexMethod<Particle>,
 }
 
@@ -43,9 +42,12 @@ impl Simulation {
             interaction_range,
             particles,
             noise_amplitude,
-            time: 0,
             neighbors_method,
         }
+    }
+
+    pub fn get_particles(&self) -> &[Particle] {
+        &self.particles
     }
 
     pub fn advance_time(&mut self) {
@@ -74,9 +76,7 @@ impl Simulation {
 
             particle.update_angle((sin_avg).atan2(cos_avg) + self.noise_amplitude);
 
-            particle.update_position(x + v_x * self.time as f64, y + v_y * self.time as f64);
+            particle.update_position((x + v_x) % self.length, (y + v_y) % self.length);
         }
-
-        self.time += 1;
     }
 }
