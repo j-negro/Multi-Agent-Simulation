@@ -7,3 +7,4 @@ edition = "2021"
 [dependencies]
 neighbors = { git = "https://github.com/j-negro/cell-index-method", tag = "v1.0.0" }
 rand = "0.8.5"
+clap = { version = "4.1.13", features = ["derive"] }

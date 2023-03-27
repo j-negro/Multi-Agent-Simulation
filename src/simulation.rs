@@ -7,7 +7,7 @@ use crate::particle::Particle;
 const PARTICLE_SPEED: f64 = 0.3;
 const PARTICLE_RADIUS: f64 = 0.0;
 
-struct Simulation {
+pub struct Simulation {
     length: f64,
     interaction_range: f64,
     particles: Vec<Particle>,
@@ -28,7 +28,7 @@ impl Simulation {
 
         let mut rng = rand::thread_rng();
 
-        let mut neighbors_method = CellIndexMethod::new(length, Some(m), interaction_range, true);
+        let neighbors_method = CellIndexMethod::new(length, Some(m), interaction_range, true);
 
         for id in 0..particle_count {
             let x = rng.gen_range(0.0..length);
@@ -72,7 +72,7 @@ impl Simulation {
             let sin_avg = sin_sum / (particle_neighbors.len() + 1) as f64;
             let cos_avg = cos_sum / (particle_neighbors.len() + 1) as f64;
 
-            particle.update_angle((sin_avg).atan2(cos_avg));
+            particle.update_angle((sin_avg).atan2(cos_avg) + self.noise_amplitude);
 
             particle.update_position(x + v_x * self.time as f64, y + v_y * self.time as f64);
         }
