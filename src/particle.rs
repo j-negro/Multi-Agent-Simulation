@@ -1,5 +1,7 @@
+use neighbors::Particle as MethodParticle;
+
 pub struct Particle {
-    id: u64,
+    id: u32,
     x: f64,
     y: f64,
     v: f64,
@@ -8,7 +10,7 @@ pub struct Particle {
 }
 
 impl Particle {
-    pub fn new(id: u64, x: f64, y: f64, v: f64, theta: f64, radius: f64) -> Particle {
+    pub fn new(id: u32, x: f64, y: f64, v: f64, theta: f64, radius: f64) -> Particle {
         Particle {
             id,
             x,
@@ -18,8 +20,10 @@ impl Particle {
             radius,
         }
     }
+}
 
-    fn get_id(&self) -> u64 {
+impl MethodParticle for Particle {
+    fn get_id(&self) -> u32 {
         self.id
     }
 
