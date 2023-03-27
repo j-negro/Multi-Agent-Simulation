@@ -17,5 +17,7 @@ fn main() {
         args.m,
     );
 
+    loop {}
+
     println!("Hello, world!");
 }
