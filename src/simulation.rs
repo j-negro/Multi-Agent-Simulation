@@ -6,10 +6,10 @@ use crate::particle::Particle;
 
 const PARTICLE_SPEED: f64 = 0.3;
 const PARTICLE_RADIUS: f64 = 0.0;
+const DELTA_TIME: f64 = 1.0;
 
 pub struct Simulation {
     length: f64,
-    interaction_range: f64,
     particles: Vec<Particle>,
     noise_amplitude: f64,
     neighbors_method: CellIndexMethod<Particle>,
@@ -32,14 +32,13 @@ impl Simulation {
         for id in 0..particle_count {
             let x = rng.gen_range(0.0..length);
             let y = rng.gen_range(0.0..length);
-            let theta = rng.gen_range(0.0..2.0 * PI);
+            let theta = rng.gen_range(-PI..PI);
             let particle = Particle::new(id as u32, x, y, PARTICLE_SPEED, theta, PARTICLE_RADIUS);
             particles.push(particle);
         }
 
         Simulation {
             length,
-            interaction_range,
             particles,
             noise_amplitude,
             neighbors_method,
@@ -76,7 +75,15 @@ impl Simulation {
 
             particle.update_angle((sin_avg).atan2(cos_avg) + self.noise_amplitude);
 
-            particle.update_position((x + v_x) % self.length, (y + v_y) % self.length);
+            let mut x = (x + v_x * DELTA_TIME) % self.length;
+            if x < 0.0 {
+                x += self.length;
+            }
+            let mut y = (y + v_y * DELTA_TIME) % self.length;
+            if y < 0.0 {
+                y += self.length;
+            }
+            particle.update_position(x, y);
         }
     }
 }

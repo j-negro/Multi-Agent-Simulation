@@ -31,7 +31,7 @@ impl Particle {
     }
 
     pub fn update_angle(&mut self, theta: f64) {
-        self.theta = theta % (2.0 * PI);
+        self.theta = theta % PI;
     }
 
     pub fn get_velocity_coordinates(&self) -> (f64, f64) {
