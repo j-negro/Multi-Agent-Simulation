@@ -1,7 +1,6 @@
 use std::hash::Hash;
 
 use neighbors::Particle as MethodParticle;
-use std::f64::consts::PI;
 
 #[derive(Debug, Clone)]
 pub struct Particle {
@@ -31,7 +30,7 @@ impl Particle {
     }
 
     pub fn update_angle(&mut self, theta: f64) {
-        self.theta = theta % PI;
+        self.theta = theta;
     }
 
     pub fn get_velocity_coordinates(&self) -> (f64, f64) {

@@ -33,7 +33,7 @@ impl Simulation {
         for id in 0..particle_count {
             let x = rng.gen_range(0.0..length);
             let y = rng.gen_range(0.0..length);
-            let theta = rng.gen_range(-PI..PI);
+            let theta = rng.gen_range(0.0..2.0 * PI);
             let particle = Particle::new(id as u32, x, y, PARTICLE_SPEED, theta, PARTICLE_RADIUS);
             particles.push(particle);
         }
@@ -83,7 +83,8 @@ impl Simulation {
                 .rng
                 .gen_range(-self.noise_amplitude / 2f64..self.noise_amplitude / 2f64);
 
-            particle.update_angle((sin_avg).atan2(cos_avg) + noise);
+            let theta = ((sin_avg).atan2(cos_avg) + noise).rem_euclid(2.0 * PI);
+            particle.update_angle(theta);
 
             let x = (x + v_x * DELTA_TIME).rem_euclid(self.length);
             let y = (y + v_y * DELTA_TIME).rem_euclid(self.length);
