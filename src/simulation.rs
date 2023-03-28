@@ -62,7 +62,7 @@ impl Simulation {
 
         let neighbors = self.neighbors_method.calculate_neighbors();
 
-        for particle in self.particles.iter_mut() {
+        for particle in &mut self.particles {
             let (x, y) = particle.get_coordinates();
             let (v_x, v_y) = particle.get_velocity_coordinates();
 

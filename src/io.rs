@@ -21,8 +21,7 @@ pub fn output_snapshot(
     // Print simulation properties
     writeln!(
         writer,
-        "Properties=id:I:1:pos:R:2:velo:R:2 pbc=\"T T\" Time={}",
-        time
+        "Properties=id:I:1:pos:R:2:velo:R:2 pbc=\"T T\" Time={time}",
     )?;
 
     for particle in particles {
