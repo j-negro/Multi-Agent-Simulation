@@ -1,4 +1,4 @@
-use std::hash::Hash;
+use std::{f64::consts::PI, hash::Hash};
 
 use neighbors::Particle as MethodParticle;
 
@@ -29,8 +29,16 @@ impl Particle {
         self.y = y;
     }
 
+    /// Updates the angle of the particle.
+    /// The angle is normalized to be between -PI and PI
     pub fn update_angle(&mut self, theta: f64) {
-        self.theta = theta;
+        let k = ((PI - theta) / (2.0 * PI)).floor();
+        let normalized_angle = theta + 2.0 * k * PI;
+
+        assert!(normalized_angle < PI);
+        assert!(normalized_angle > -PI);
+
+        self.theta = normalized_angle;
     }
 
     pub fn get_velocity_coordinates(&self) -> (f64, f64) {
