@@ -29,7 +29,13 @@ fn main() -> Result<()> {
     )?;
 
     for i in 0..args.max_iterations {
-        simulation.advance_time();
+        simulation.run_cycle();
+
+        let order = simulation.get_order_parameter();
+
+        // TODO: make graph with order parameter
+        dbg!(order);
+
         output_snapshot(
             &mut file,
             simulation.get_particles(),

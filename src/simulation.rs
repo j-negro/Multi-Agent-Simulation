@@ -13,6 +13,7 @@ pub struct Simulation {
     particles: Vec<Particle>,
     noise_amplitude: f64,
     neighbors_method: CellIndexMethod<Particle>,
+    order_parameter: f64,
     rng: ThreadRng,
 }
 
@@ -38,11 +39,21 @@ impl Simulation {
             particles.push(particle);
         }
 
+        let velocity_sum = particles
+            .iter()
+            .map(Particle::get_velocity_coordinates)
+            .reduce(|(vx_acc, vy_acc), (vx, vy)| (vx_acc + vx, vy_acc + vy))
+            .expect("particles should not be empty");
+
+        let velocity_sum_module = (velocity_sum.0.powi(2) + velocity_sum.1.powi(2)).sqrt();
+        let order_parameter = velocity_sum_module / (particle_count as f64 * PARTICLE_SPEED);
+
         Simulation {
             length,
             particles,
             noise_amplitude,
             neighbors_method,
+            order_parameter,
             rng,
         }
     }
@@ -55,16 +66,21 @@ impl Simulation {
         self.length
     }
 
-    pub fn advance_time(&mut self) {
+    pub fn run_cycle(&mut self) {
         let particles_before = self.particles.clone();
 
         self.neighbors_method.set_particles(particles_before);
 
         let neighbors = self.neighbors_method.calculate_neighbors();
 
+        let mut velocity_sum = (0.0, 0.0);
+
         for particle in &mut self.particles {
             let (x, y) = particle.get_coordinates();
             let (v_x, v_y) = particle.get_velocity_coordinates();
+
+            velocity_sum.0 += v_x;
+            velocity_sum.1 += v_y;
 
             let particle_neighbors = &neighbors[particle.get_id() as usize];
 
@@ -91,5 +107,13 @@ impl Simulation {
             let y = (y + v_y * DELTA_TIME).rem_euclid(self.length);
             particle.update_position(x, y);
         }
+
+        let velocity_sum_module = (velocity_sum.0.powi(2) + velocity_sum.1.powi(2)).sqrt();
+
+        self.order_parameter = velocity_sum_module / (self.particles.len() as f64 * PARTICLE_SPEED);
+    }
+
+    pub fn get_order_parameter(&self) -> f64 {
+        self.order_parameter
     }
 }
