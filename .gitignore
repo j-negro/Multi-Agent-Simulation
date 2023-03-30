@@ -17,3 +17,4 @@ Cargo.lock
 # Output files
 *.xyz
 *.png
+*.txt
