@@ -85,8 +85,8 @@ pub fn output_order(path: &str, orders_list: &[f64]) -> Result<()> {
 
     writeln!(output, "{}", orders_list.len())?;
 
-    for (t, order) in orders_list.iter().enumerate() {
-        writeln!(output, "{t} {order}")?;
+    for order in orders_list {
+        writeln!(output, "{order}")?;
     }
     Ok(())
 }
