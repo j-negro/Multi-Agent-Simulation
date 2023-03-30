@@ -75,9 +75,12 @@ impl Simulation {
             let sin_avg = sin_sum / (particle_neighbors.len() + 1) as f64;
             let cos_avg = cos_sum / (particle_neighbors.len() + 1) as f64;
 
-            let noise = self
-                .rng
-                .gen_range(-self.noise_amplitude / 2f64..self.noise_amplitude / 2f64);
+            let noise = if self.noise_amplitude != 0.0 {
+                self.rng
+                    .gen_range(-self.noise_amplitude / 2f64..self.noise_amplitude / 2f64)
+            } else {
+                0.0
+            };
 
             let theta = (sin_avg).atan2(cos_avg) + noise;
 
