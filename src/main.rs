@@ -14,13 +14,7 @@ fn main() -> Result<()> {
     let args = Cli::parse();
     let mut file = File::create(args.output_path)?;
 
-    let mut simulation = Simulation::new(
-        args.area_size,
-        args.interaction_range,
-        args.noise_amplitude,
-        args.number_of_particles,
-        args.m,
-    );
+    let mut simulation = Simulation::new(args.length, args.noise_amplitude, args.particle_count);
     output_snapshot(
         &mut file,
         simulation.get_particles(),

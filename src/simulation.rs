@@ -7,6 +7,7 @@ use crate::particle::Particle;
 const PARTICLE_SPEED: f64 = 0.3;
 const PARTICLE_RADIUS: f64 = 0.0;
 const DELTA_TIME: f64 = 1.0;
+const INTERACTION_RANGE: f64 = 1.0;
 
 pub struct Simulation {
     length: f64,
@@ -18,18 +19,13 @@ pub struct Simulation {
 }
 
 impl Simulation {
-    pub fn new(
-        length: f64,
-        interaction_range: f64,
-        noise_amplitude: f64,
-        particle_count: usize,
-        m: usize,
-    ) -> Self {
+    pub fn new(length: f64, noise_amplitude: f64, particle_count: usize) -> Self {
         let mut particles = Vec::with_capacity(particle_count);
 
         let mut rng = rand::thread_rng();
 
-        let neighbors_method = CellIndexMethod::new(length, Some(m), interaction_range, true);
+        // TODO: Calculate m
+        let neighbors_method = CellIndexMethod::new(length, None, INTERACTION_RANGE, true);
 
         for id in 0..particle_count {
             let x = rng.gen_range(0.0..length);
