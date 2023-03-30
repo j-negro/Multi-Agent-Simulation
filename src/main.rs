@@ -23,13 +23,12 @@ fn main() -> Result<()> {
     )?;
 
     let mut orders_list = Vec::with_capacity(args.max_iterations as usize + 1);
-    orders_list.push(simulation.get_order_parameter());
+    orders_list.push(simulation.calculate_order_parameter());
 
     for i in 0..args.max_iterations {
         simulation.run_cycle();
 
-        let order = simulation.get_order_parameter();
-        orders_list.push(order);
+        orders_list.push(simulation.calculate_order_parameter());
 
         io::output_snapshot(
             &mut file,
