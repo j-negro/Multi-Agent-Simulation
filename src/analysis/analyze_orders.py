@@ -4,12 +4,14 @@ START = 20
 
 try:
     with open("orders_output.txt", "r") as f:
-        count = int(f.readline())
-
         orders: list[float] = []
-        for i in range(count):
-            if i > START:
-                orders.append(float(f.readline()))
+        # Skip first START lines
+        for _ in range(START):
+            f.readline()
+
+        for line in f:
+            orders.append(float(line))
+
 except FileNotFoundError:
     print("File not found")
     raise SystemExit
