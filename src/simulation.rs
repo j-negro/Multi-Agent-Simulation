@@ -4,7 +4,7 @@ use std::f64::consts::PI;
 
 use crate::particle::Particle;
 
-const PARTICLE_SPEED: f64 = 0.3;
+const PARTICLE_SPEED: f64 = 0.03;
 const PARTICLE_RADIUS: f64 = 0.0;
 const DELTA_TIME: f64 = 1.0;
 const INTERACTION_RANGE: f64 = 1.0;
