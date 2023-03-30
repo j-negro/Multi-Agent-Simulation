@@ -13,4 +13,6 @@ pub struct Cli {
     pub max_iterations: u32,
     #[arg(short, long, default_value_t = String::from("./output.xyz"))]
     pub output_path: String,
+    #[arg(short, long)]
+    pub graph_path: Option<String>,
 }

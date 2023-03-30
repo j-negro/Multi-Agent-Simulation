@@ -1,12 +1,12 @@
 mod args;
 mod io;
 mod particle;
+mod plot;
 mod simulation;
 
 use anyhow::Result;
 use args::Cli;
 use clap::Parser;
-use io::output_snapshot;
 use simulation::Simulation;
 use std::fs::File;
 
@@ -15,27 +15,32 @@ fn main() -> Result<()> {
     let mut file = File::create(args.output_path)?;
 
     let mut simulation = Simulation::new(args.length, args.noise_amplitude, args.particle_count);
-    output_snapshot(
+    io::output_snapshot(
         &mut file,
         simulation.get_particles(),
         simulation.get_length(),
         0,
     )?;
 
+    let mut orders_list = Vec::with_capacity(args.max_iterations as usize + 1);
+    orders_list.push((0, simulation.get_order_parameter()));
+
     for i in 0..args.max_iterations {
         simulation.run_cycle();
 
         let order = simulation.get_order_parameter();
+        orders_list.push((i + 1, order));
 
-        // TODO: make graph with order parameter
-        dbg!(order);
-
-        output_snapshot(
+        io::output_snapshot(
             &mut file,
             simulation.get_particles(),
             simulation.get_length(),
             i + 1,
         )?;
+    }
+
+    if let Some(path) = args.graph_path {
+        plot::order_time_graph(&path, orders_list, args.max_iterations)?;
     }
 
     Ok(())
