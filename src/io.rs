@@ -79,3 +79,14 @@ pub fn output_snapshot(
 
     Ok(())
 }
+
+pub fn output_order(path: &str, orders_list: &[f64]) -> Result<()> {
+    let mut output = File::create(path)?;
+
+    writeln!(output, "{}", orders_list.len())?;
+
+    for (t, order) in orders_list.iter().enumerate() {
+        writeln!(output, "{t} {order}")?;
+    }
+    Ok(())
+}

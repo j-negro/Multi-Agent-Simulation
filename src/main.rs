@@ -39,6 +39,7 @@ fn main() -> Result<()> {
         )?;
     }
 
+    io::output_order(&args.orders_output_path, &orders_list)?;
 
     if let Some(path) = args.graph_path {
         plot::order_time_graph(&path, orders_list)?;
