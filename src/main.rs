@@ -12,7 +12,7 @@ use std::fs::File;
 
 fn main() -> Result<()> {
     let args = Cli::parse();
-    let mut file = File::create(args.output_path)?;
+    let mut file = File::create(args.simulation_output_path)?;
 
     let mut simulation = Simulation::new(args.length, args.noise_amplitude, args.particle_count);
     io::output_snapshot(
@@ -23,13 +23,13 @@ fn main() -> Result<()> {
     )?;
 
     let mut orders_list = Vec::with_capacity(args.max_iterations as usize + 1);
-    orders_list.push((0, simulation.get_order_parameter()));
+    orders_list.push(simulation.get_order_parameter());
 
     for i in 0..args.max_iterations {
         simulation.run_cycle();
 
         let order = simulation.get_order_parameter();
-        orders_list.push((i + 1, order));
+        orders_list.push(order);
 
         io::output_snapshot(
             &mut file,
@@ -39,8 +39,9 @@ fn main() -> Result<()> {
         )?;
     }
 
+
     if let Some(path) = args.graph_path {
-        plot::order_time_graph(&path, orders_list, args.max_iterations)?;
+        plot::order_time_graph(&path, orders_list)?;
     }
 
     Ok(())

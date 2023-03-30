@@ -8,11 +8,7 @@ const HEIGHT: u32 = 720;
 const WIDTH: u32 = 1280;
 const LABEL_STYLE: (&str, u32) = ("serif", 20);
 
-pub fn order_time_graph(
-    graph_path: &str,
-    orders_list: Vec<(u32, f64)>,
-    iterations: u32,
-) -> Result<()> {
+pub fn order_time_graph(graph_path: &str, orders_list: Vec<f64>) -> Result<()> {
     let drawing_area = BitMapBackend::new(graph_path, (WIDTH, HEIGHT)).into_drawing_area();
     drawing_area.fill(&WHITE)?;
 
@@ -22,7 +18,7 @@ pub fn order_time_graph(
         .margin_right(NO_LABEL_SIZE)
         .set_label_area_size(LabelAreaPosition::Left, LABEL_AREA_SIZE)
         .set_label_area_size(LabelAreaPosition::Bottom, LABEL_AREA_SIZE)
-        .build_cartesian_2d(0u32..iterations, 0f64..1f64)?;
+        .build_cartesian_2d(0..orders_list.len(), 0f64..1f64)?;
 
     ctx.configure_mesh()
         .x_desc("Time (iterations)")
@@ -31,6 +27,6 @@ pub fn order_time_graph(
         .y_label_style(LABEL_STYLE)
         .draw()?;
 
-    ctx.draw_series(LineSeries::new(orders_list.into_iter(), &BLUE))?;
+    ctx.draw_series(LineSeries::new(orders_list.into_iter().enumerate(), &BLUE))?;
     Ok(())
 }
