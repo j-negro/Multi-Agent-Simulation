@@ -13,4 +13,7 @@ Cargo.lock
 # Added by cargo
 
 /target
-output.xyz
+
+# Output files
+*.xyz
+*.png
