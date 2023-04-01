@@ -25,7 +25,7 @@ for num_particles in np.arange(
     ):
         try:
             with open(
-                f"./src/analysis/data/particles_{num_particles}/txt/noise_{round(noise, 2)}_.txt",
+                f"./data/particles_{num_particles}/txt/noise_{round(noise, 2)}.txt",
                 "r",
             ) as f:
                 orders: list[float] = []
@@ -65,12 +65,12 @@ for num_particles in np.arange(
         [metric["noise"] for metric in metrics_for_num_particles],
         [metric["mean"] for metric in metrics_for_num_particles],
         yerr=[metric["std"] for metric in metrics_for_num_particles],
-        fmt="o",
-        label="Mean",
+        fmt="bx",
+        ecolor="r",
+        capsize=5,
     )
 
     plt.xlabel("Noise (radians)")
     plt.ylabel("Order")
-    plt.legend()
-    plt.savefig(f"./src/analysis/results/particles_{num_particles}.png")
+    plt.savefig(f"./results/particles_{num_particles}.png")
     plt.clf()

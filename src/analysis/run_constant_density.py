@@ -17,19 +17,20 @@ NUM_PARTICLES_LOWER_BOUND = 100
 NUM_PARTICLES_UPPER_BOUND = 1000
 NUM_PARTICLES_STEP = 100
 
+FIXED_DENSITY = 4
+length_values = np.array(range(5, 25, 5))
 
-for num_particles in range(
-    NUM_PARTICLES_LOWER_BOUND,
-    NUM_PARTICLES_UPPER_BOUND + NUM_PARTICLES_STEP,
-    NUM_PARTICLES_STEP,
-):
+num_particles_values = np.array(
+    [FIXED_DENSITY * length**2 for length in length_values]
+)
+noise_values = np.arange(NOISE_LOWER_BOUND, NOISE_UPPER_BOUND + NOISE_STEP, NOISE_STEP)
+
+
+for num_particles in num_particles_values:
     # Create a folder for the data
-    os.makedirs(f"./src/analysis/data/particles_{num_particles}/txt", exist_ok=True)
-    os.makedirs(f"./src/analysis/data/particles_{num_particles}/graphs", exist_ok=True)
+    os.makedirs(f"./data/particles_{num_particles}/txt", exist_ok=True)
 
-    for noise in np.arange(
-        NOISE_LOWER_BOUND, NOISE_UPPER_BOUND + NOISE_STEP, NOISE_STEP
-    ):
+    for noise in noise_values:
         subprocess.run(
             [
                 "./target/release/multi-agent-simulation",
@@ -42,8 +43,6 @@ for num_particles in range(
                 "-m",
                 str(MAX_ITERATIONS),
                 "-o",
-                f"./src/analysis/data/particles_{num_particles}/txt/noise_{round(noise, 2)}.txt",
-                "-g",
-                f"./src/analysis/data/particles_{num_particles}/graphs/noise_{round(noise, 2)}.png",
+                f"./data/particles_{num_particles}/txt/noise_{round(noise, 2)}.txt",
             ]
         )
