@@ -20,15 +20,22 @@ NUM_PARTICLES_STEP = 100
 FIXED_DENSITY = 4
 length_values = np.array(range(5, 25, 5))
 
-num_particles_values = np.array(
-    [FIXED_DENSITY * length**2 for length in length_values]
-)
+fixed_density_parameters = [
+    {
+        "length": round(length, 2),
+        "num_particles": FIXED_DENSITY * length**2,
+    }
+    for length in length_values
+]
 noise_values = np.arange(NOISE_LOWER_BOUND, NOISE_UPPER_BOUND + NOISE_STEP, NOISE_STEP)
 
 
-for num_particles in num_particles_values:
+for run in fixed_density_parameters:
+    num_particles = run["num_particles"]
+    length = run["length"]
+
     # Create a folder for the data
-    os.makedirs(f"./data/particles_{num_particles}/txt", exist_ok=True)
+    os.makedirs(f"./data/particles_{num_particles}_lenght_{length}/txt", exist_ok=True)
 
     for noise in noise_values:
         subprocess.run(
@@ -39,10 +46,10 @@ for num_particles in num_particles_values:
                 "-n",
                 str(noise),
                 "-l",
-                str(SIMULATION_LENGTH),
+                str(length),
                 "-m",
                 str(MAX_ITERATIONS),
                 "-o",
-                f"./data/particles_{num_particles}/txt/noise_{round(noise, 2)}.txt",
+                f"./data/particles_{num_particles}_lenght_{length}/txt/noise_{round(noise, 2)}.txt",
             ]
         )

@@ -6,62 +6,48 @@ from matplotlib import pyplot as plt
 START = 100
 
 # Simulation properties
-MAX_ITERATIONS = 1000
+MAX_ITERATIONS = 2000
 
-# Noise properties
-NOISE_LOWER_BOUND = 0.0
-NOISE_UPPER_BOUND = 5.0
-NOISE_STEP = 0.25
+os.makedirs("./data/graph_orders_results", exist_ok=True)
+plt.rcParams["font.family"] = "serif"
+plt.figure(figsize=(1280 / 108, 720 / 108), dpi=108)
+plt.grid()
 
-# Density properties
-SIMULATION_LENGTH = 5
-NUM_PARTICLES_LOWER_BOUND = 100
-NUM_PARTICLES_UPPER_BOUND = 1000
-NUM_PARTICLES_STEP = 100
+FIXED_LENGTH = 20
+FIXED_NOISE = 1.0
 
-FIXED_DENSITY = 4
-length_values = np.array(range(5, 25, 5))
+DIRECTORY_PATH = f"./data/noise_{FIXED_NOISE}_length_{FIXED_LENGTH}"
 
-num_particles_values = np.array(
-    [FIXED_DENSITY * length**2 for length in length_values]
-)
-noise_values = np.arange(NOISE_LOWER_BOUND, NOISE_UPPER_BOUND + NOISE_STEP, NOISE_STEP)
+orders_per_num_particles = {}
+for file in os.listdir(DIRECTORY_PATH):
+    if file.endswith(".txt"):
+        num_particles = int(file.split(".")[0].split("_")[1])
 
-os.makedirs("./data/constant_order_graphs", exist_ok=True)
+        if num_particles != 200 and num_particles != 1000 and num_particles != 2000:
+            continue
 
-# Plot the order parameter as a function of noise for different densities
-for noise in noise_values:
-    for num_particles in num_particles_values:
-        try:
-            with open(
-                f"./data/particles_{num_particles}/txt/noise_{round(noise, 2)}.txt",
-                "r",
-            ) as f:
-                orders: list[float] = []
+        with open(f"{DIRECTORY_PATH}/{file}", "r") as f:
+            orders: list[float] = []
 
-                # Skip the first line
-                for _ in range(0, 2):
-                    f.readline()
+            # Skip the first line
+            for _ in range(0, 2):
+                f.readline()
 
-                for line in f:
+            for line in f:
 
-                    orders.append(float(line))
-
-        except FileNotFoundError:
-            print("File not found")
-            raise SystemExit
+                orders.append(float(line))
 
         np_orders = np.array(orders)
+        orders_per_num_particles[num_particles] = np_orders
+# Sort the dictionary by the number of particles ascending
+orders_per_num_particles = dict(sorted(orders_per_num_particles.items()))
+for num_particles, np_orders in orders_per_num_particles.items():
+    plt.plot(np.arange(0, MAX_ITERATIONS), np_orders, label=f"N: {num_particles}")
+plt.xlabel("Iterations")
+plt.ylabel("Order parameter")
 
-        plt.plot(
-            np.arange(0, MAX_ITERATIONS), np_orders, label=f"{num_particles} particles"
-        )
-
-    plt.xlabel("Iterations")
-    plt.ylabel("Order parameter")
-
-    plt.legend()
-    plt.savefig(
-        f"./data/constant_order_graphs/Order_Parameters_Noise_{round(noise, 2)}.png"
-    )
-    plt.clf()
+plt.legend()
+plt.savefig(
+    f"./data/graph_orders_results/Order_Parameters_Noise_{FIXED_NOISE}_Length_{FIXED_LENGTH}.png"
+)
+plt.clf()

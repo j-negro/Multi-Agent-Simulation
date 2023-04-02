@@ -50,6 +50,10 @@ for num_particles in np.arange(
             }
         )
 
+plt.rcParams["font.family"] = "serif"
+plt.figure(figsize=(1280 / 108, 720 / 108), dpi=108)
+plt.grid()
+
 # For every number of particles, plot the mean and std of the orders as a function of noise
 for num_particles in np.arange(
     NUM_PARTICLES_LOWER_BOUND,
