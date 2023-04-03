@@ -11,7 +11,10 @@ plt.rcParams["font.family"] = "serif"
 plt.figure(figsize=(1280 / 108, 720 / 108), dpi=108)
 plt.grid()
 
-DIRECTORY_PATH = f"./data/particles_1600_lenght_20"
+LENGTH = 20
+NUM_PARTICLES = 1600
+
+DIRECTORY_PATH = f"./data/particles_{NUM_PARTICLES}_lenght_{LENGTH}"
 
 orders_per_noise_value = {}
 for file in os.listdir(DIRECTORY_PATH):
@@ -25,7 +28,13 @@ for file in os.listdir(DIRECTORY_PATH):
         )
         noise_value = float(noise_value_str)
 
-        print(f"Processing file: {file} with noise value: {noise_value}")
+        if (
+            noise_value != 0.0
+            and noise_value != 1.0
+            and noise_value != 2.0
+            and noise_value != 3.0
+        ):
+            continue
 
         with open(f"{DIRECTORY_PATH}/{file}", "r") as f:
             orders: list[float] = []
@@ -47,7 +56,7 @@ for noise_value, np_orders in orders_per_noise_value.items():
         label="η: {:.2f}".format(noise_value),
     )
 plt.xlabel("Iterations")
-plt.ylabel("Order parameter")
+plt.ylabel("Order Parameter")
 
 plt.legend()
 plt.savefig(

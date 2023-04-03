@@ -4,16 +4,16 @@ import subprocess
 import numpy as np
 
 # Simulation properties
-MAX_ITERATIONS = 1000
+MAX_ITERATIONS = 2000
 
 # Noise properties
 NOISE_LOWER_BOUND = 0.0
-NOISE_UPPER_BOUND = 5.0
+NOISE_UPPER_BOUND = 3.0
 NOISE_STEP = 0.25
 
 # Density properties
 FIXED_DENSITY = 4
-length_values = np.array(range(5, 25, 5))
+length_values = np.array(range(5, 35 + 5, 5))
 
 fixed_density_parameters = [
     {
@@ -30,7 +30,7 @@ for run in fixed_density_parameters:
     length = run["length"]
 
     # Create a folder for the data
-    os.makedirs(f"./data/particles_{num_particles}_lenght_{length}/txt", exist_ok=True)
+    os.makedirs(f"./data/particles_{num_particles}_lenght_{length}/", exist_ok=True)
 
     for noise in noise_values:
         subprocess.run(
@@ -45,6 +45,6 @@ for run in fixed_density_parameters:
                 "-m",
                 str(MAX_ITERATIONS),
                 "-o",
-                f"./data/particles_{num_particles}_lenght_{length}/txt/noise_{round(noise, 2)}.txt",
+                f"./data/particles_{num_particles}_lenght_{length}/noise_{round(noise, 2)}.txt",
             ]
         )

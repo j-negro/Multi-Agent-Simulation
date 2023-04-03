@@ -3,7 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 
-START = 500
+START = 1000
 
 # Noise properties
 NOISE_LOWER_BOUND = 0.0
@@ -52,34 +52,31 @@ for num_particles, length in density_values:
                 "num_particles": num_particles,
                 "noise": noise,
                 "mean": np.mean(np_orders),
-                "std": np.std(np_orders),
             }
         )
 
 plt.rcParams["font.family"] = "serif"
 plt.figure(figsize=(1280 / 108, 720 / 108), dpi=108)
 
-os.makedirs("./data/analyze_orders_result", exist_ok=True)
-# For every number of particles, plot the mean and std of the orders as a function of noise
+os.makedirs("./data/graph_all_orders_result", exist_ok=True)
+
+# Graph every density value with a distinct marker and color
+markers = ["+", "x", "<", ">", "s", "*", "H", "X", "d"]
+
 for num_particles, length in density_values:
     metrics_for_num_particles = [
         metric for metric in metrics if metric["num_particles"] == num_particles
     ]
 
-    # Plot the mean as scatter plot, and the std as error bars
-    plt.errorbar(
+    plt.scatter(
         [metric["noise"] for metric in metrics_for_num_particles],
         [metric["mean"] for metric in metrics_for_num_particles],
-        yerr=[metric["std"] for metric in metrics_for_num_particles],
-        fmt="bx",
-        ecolor="r",
-        capsize=5,
+        label=f"N: {num_particles}",
+        marker=markers.pop(),
     )
 
     plt.xlabel("Noise (radians)")
     plt.ylabel("Order Parameter")
     plt.grid()
-    plt.savefig(
-        f"./data/analyze_orders_result/particles_{num_particles}_length_{length}.png"
-    )
-    plt.clf()
+plt.legend()
+plt.savefig(f"./data/graph_all_orders_result/Density_4.png")
